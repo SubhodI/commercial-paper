@@ -167,7 +167,7 @@ contract commercialPaper  {
     string  status;
     
     modifier checkCall(address caller) {
-        if (caller == depositoryAddress) {
+        if (caller == depositoryAddress || !StringUtils.equal(status,"expired")) {
             _;
         }
     }
