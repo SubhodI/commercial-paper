@@ -93,6 +93,7 @@ contract depository is usingOraclize {
         paper.updateInvestor(investorAddress);
     }
     
+    // payable function, to be called with 2 ethers value
     function investorAccept(address contractAddress) payable  {
         commercialPaper paper = commercialPaper(contractAddress);
         address currentOwner = paper.getOwner();
