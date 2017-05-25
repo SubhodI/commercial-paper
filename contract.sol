@@ -125,7 +125,7 @@ contract depository is usingOraclize {
                 }
             }
             // oraclize query to be called after maturity period
-            bytes32 reqId = oraclize_query("URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
+            bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
             idList[reqId]=transaction(false,contractAddress);
     }
     
