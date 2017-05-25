@@ -93,7 +93,8 @@ contract depository is usingOraclize {
         paper.updateInvestor(investorAddress);
     }
     
-    // payable function, to be called with 2 ethers value
+     // payable function, to be called with 2 ethers value
+     // use different account for deploying transaction 
     function investorAccept(address contractAddress) payable  {
         commercialPaper paper = commercialPaper(contractAddress);
         address currentOwner = paper.getOwner();
@@ -132,7 +133,7 @@ contract depository is usingOraclize {
         commercialPaper paper = commercialPaper(contractAddress);
             var (owner,issuance,investor,valueDate,faceValue,maturityDate,status) = paper.getContract();
             paper.updateOwner(issuance);
-            paper.updateStatus("redeemed");
+            paper.updateStatus("expired");
             CPKeys[issuance].push(contractAddress);
     }
     
