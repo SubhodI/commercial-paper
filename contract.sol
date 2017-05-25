@@ -69,7 +69,7 @@ contract depository is usingOraclize {
     event Event(string action,string result,address contractAddress);
     mapping(bytes32 => transaction) idList;
     // true = valuedate request
-    // false = maturity date requests
+    // false = maturity date request
     
     function getPapers() constant returns(address[]){
         return CPKeys[msg.sender];
