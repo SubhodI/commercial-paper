@@ -98,9 +98,9 @@ contract depository is usingOraclize {
     function investorAccept(address contractAddress) payable  {
         commercialPaper paper = commercialPaper(contractAddress);
         address currentOwner = paper.getOwner();
-        var (owner,issuance,investor,valueDate,faceValue,maturityDate,status) = paper.getContract();
+        var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
         // oraclize query 
-       bytes32 reqId = oraclize_query("URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
+       bytes32 reqId = oraclize_query(valueDate-now,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
        idList[reqId]=transaction(true,contractAddress);
 
         //bytes32 myid= oraclize_query(scheduled_arrivaltime+3*3600,
@@ -108,7 +108,7 @@ contract depository is usingOraclize {
     
     function issuerToInvestor(address contractAddress) internal {
          commercialPaper paper = commercialPaper(contractAddress);
-            var (owner,issuance,investor,valueDate,faceValue,maturityDate,status) = paper.getContract();
+            var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
             paper.updateOwner(investor);
             paper.updateStatus("accepted");
             CPKeys[investor].push(contractAddress);
@@ -125,13 +125,13 @@ contract depository is usingOraclize {
                 }
             }
             // oraclize query to be called after maturity period
-            bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
+            bytes32 reqId = oraclize_query(maturityDate-now,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
             idList[reqId]=transaction(false,contractAddress);
     }
     
     function investorToIssuer(address contractAddress) internal {
         commercialPaper paper = commercialPaper(contractAddress);
-            var (owner,issuance,investor,valueDate,faceValue,maturityDate,status) = paper.getContract();
+         var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
             paper.updateOwner(issuance);
             paper.updateStatus("expired");
             CPKeys[issuance].push(contractAddress);
@@ -209,8 +209,8 @@ contract commercialPaper  {
             selfdestruct(owner);
     }
    
-    function getContract() constant returns(address,address,address,uint,uint,uint,string) {
-        return (owner,issuance,investor,faceValue,valueDate,maturityDate,status);
+    function getContract() constant returns(address,address,address,address,uint,uint,uint,string) {
+        return (address(this),owner,issuance,investor,faceValue,valueDate,maturityDate,status);
     }
     
    
