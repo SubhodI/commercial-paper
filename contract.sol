@@ -58,8 +58,6 @@ contract depository is usingOraclize {
     
     mapping(address => address[]) CPKeys;
     
-    mapping(address => address[]) CPRequestsKeys;
-    
     struct transaction {
         bool flag;
         address contractAddress;
@@ -79,10 +77,6 @@ contract depository is usingOraclize {
         return CPKeys[msg.sender];
     }
     
-     function getRequests() constant returns(address[]) {
-        return CPRequestsKeys[msg.sender];
-    }
-    
     function getContract(address contractAddress) constant returns(address CA,address owner,address issuance,address investor,uint faceValue,uint valueDate,uint maturityDate, bytes32 status) {
      //  commercialPaper paper = commercialPaper(contractAddress);
         (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = commercialPaper(contractAddress).getContract();
@@ -94,9 +88,9 @@ contract depository is usingOraclize {
         CPKeys[msg.sender].push(contractAddress);
     }
     
-    function issuerTransfer(address contractAddress,address investorAddress){
+    function issueTransfer(address contractAddress,address investorAddress){
         
-        CPRequestsKeys[investorAddress].push(contractAddress);
+        CPKeys[investorAddress].push(contractAddress);
         commercialPaper paper = commercialPaper(contractAddress);
         paper.updateStatus("pending");
         paper.updateInvestor(investorAddress);
@@ -107,6 +101,7 @@ contract depository is usingOraclize {
     function investorAccept(address contractAddress) payable  {
         commercialPaper paper = commercialPaper(contractAddress);
         address currentOwner = paper.getOwner();
+         paper.updateStatus("accepted");
         var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
         // oraclize query 
        bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
@@ -119,20 +114,7 @@ contract depository is usingOraclize {
          commercialPaper paper = commercialPaper(contractAddress);
             var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
             paper.updateOwner(investor);
-            paper.updateStatus("accepted");
-            CPKeys[investor].push(contractAddress);
-            for(uint i=0;i<CPKeys[owner].length;i++) {
-                if(CPKeys[owner][i] == contractAddress) {
-                    delete CPKeys[owner][i];
-                }
-                
-            }
-        
-            for(uint j=0;j<CPRequestsKeys[investor].length;j++) {
-                if(CPRequestsKeys[investor][j] == contractAddress) {
-                    delete CPRequestsKeys[investor][j];
-                }
-            }
+            paper.updateStatus("transfered");
             // oraclize query to be called after maturity period
             bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
             idList[reqId]=transaction(false,contractAddress);
@@ -143,7 +125,7 @@ contract depository is usingOraclize {
          var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
             paper.updateOwner(issuance);
             paper.updateStatus("expired");
-            CPKeys[issuance].push(contractAddress);
+           
     }
     
     function __callback(bytes32 myid, string result) {
