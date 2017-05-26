@@ -66,11 +66,15 @@ contract depository is usingOraclize {
         
     }
     
+    
     event Event(string action,string result,address contractAddress);
     mapping(bytes32 => transaction) idList;
     // true = valuedate request
     // false = maturity date request
     
+    function depository() {
+        OAR = OraclizeAddrResolverI(0x24C71281cD4F8A4848EB4CC96551196Fa3c665de);
+    }
     function getPapers() constant returns(address[]){
         return CPKeys[msg.sender];
     }
