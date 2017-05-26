@@ -79,8 +79,13 @@ contract depository is usingOraclize {
         return CPKeys[msg.sender];
     }
     
-    function getRequests() constant returns(address[]) {
+     function getRequests() constant returns(address[]) {
         return CPRequestsKeys[msg.sender];
+    }
+    
+    function getContract(address contractAddress) constant returns(address CA,address owner,address issuance,address investor,uint faceValue,uint valueDate,uint maturityDate, bytes32 status) {
+     //  commercialPaper paper = commercialPaper(contractAddress);
+        (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = commercialPaper(contractAddress).getContract();
     }
     
     function addPaper(address pIssuance, uint pFaceValue, uint pValueDate, uint pMaturityDate) {
@@ -168,10 +173,10 @@ contract commercialPaper  {
     uint faceValue;
     uint valueDate;
     uint maturityDate;
-    string  status;
+    bytes32  status;
     
     modifier checkCall(address caller) {
-        if (caller == depositoryAddress || !StringUtils.equal(status,"expired")) {
+        if (caller == depositoryAddress || status == "expired") {
             _;
         }
     }
@@ -202,7 +207,7 @@ contract commercialPaper  {
         return owner;
     }
     
-     function updateStatus(string pStatus) checkCall(msg.sender) {
+     function updateStatus(bytes32 pStatus) checkCall(msg.sender) {
         status = pStatus;
     }
     
@@ -213,7 +218,7 @@ contract commercialPaper  {
             selfdestruct(owner);
     }
    
-    function getContract() constant returns(address,address,address,address,uint,uint,uint,string) {
+    function getContract() constant returns(address,address,address,address,uint,uint,uint,bytes32) {
         return (address(this),owner,issuance,investor,faceValue,valueDate,maturityDate,status);
     }
     
