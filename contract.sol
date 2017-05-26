@@ -100,7 +100,7 @@ contract depository is usingOraclize {
         address currentOwner = paper.getOwner();
         var (CA,owner,issuance,investor,faceValue,valueDate,maturityDate,status) = paper.getContract();
         // oraclize query 
-       bytes32 reqId = oraclize_query(valueDate-now,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
+       bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
        idList[reqId]=transaction(true,contractAddress);
 
         //bytes32 myid= oraclize_query(scheduled_arrivaltime+3*3600,
@@ -125,7 +125,7 @@ contract depository is usingOraclize {
                 }
             }
             // oraclize query to be called after maturity period
-            bytes32 reqId = oraclize_query(maturityDate-now,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
+            bytes32 reqId = oraclize_query(60,"URL","json(https://dlgateway.persistent.co.in/api/users/591a9c8d2685e7000fed28a9).email");
             idList[reqId]=transaction(false,contractAddress);
     }
     
