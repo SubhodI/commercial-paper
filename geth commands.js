@@ -3,6 +3,7 @@ abi=[{"constant":true,"inputs":[{"name":"contractAddress","type":"address"}],"na
 
 
 
+
 address="0x4867b0e56a6f1904d815b7bc0de1dfee77e9b594"
 cp=web3.eth.contract(abi).at(address);
 
@@ -17,3 +18,11 @@ investor="0x0638e1574728b6d862dd5d3a3e0942c3be47d996"
 
 
 0xfd1b12f3a1f87c24101e42d1f1b26560ade40dd1
+
+
+
+Geth 2 public key = "QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc="   issuer
+Geth 5 public key = "R56gy4dn24YOjwyesTczYa8m5xhP6hF2uTMCju/1xkY="   investor
+
+Geth 1 public key = "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo="   Oraclize
+Geth 4 public key = "oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8="   COntract deployment 
